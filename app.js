@@ -23,6 +23,13 @@ app.use(express.json());
 app.get("/", (req, res) => {
     res.render("index")
 })
+app.get("/singleuse", (req, res) => {
+    res.render("singleuse");
+});
+app.get("/library", (req, res) => {
+    res.render("library");
+});
+
 app.post("/", (req, res) => {
 
 })

@@ -1,0 +1,1 @@
+app.engine('test', require('test').__express)
