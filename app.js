@@ -21,7 +21,7 @@ app.use(express.json());
 
 // routes
 app.get("/", (req, res) => {
-    res.send("Hello")
+    res.render("index")
 })
 app.post("/", (req, res) => {
 
