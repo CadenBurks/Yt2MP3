@@ -16,10 +16,55 @@ body{
   font-family: 'Orbitron', sans-serif;
 }
 
+.ID-container{
+  height: 30vh;
+  background-color: red;
+  align-content: center;
+  padding-left: 50vh;
+}
+
+#IDcontainer h4{
+  font-style: italic;
+  font-size: 30px;
+}
+
+input[type=text] {
+  width: fit-content;
+  padding: 12px 20px;
+  margin: 8px;
+  box-sizing: border-box;
+  background-color: white;
+  border: 3px inset black;
+}
+
+#convert-button{
+  width: fit-content;
+  color: black;
+  padding: 12px;
+  color: white;
+  background-color: black;
+  border-radius: 5px;
+  text-decoration: none;
+  box-shadow: 2px 2px 5px gray;
+  font-style: normal;
+  cursor: pointer;
+  letter-spacing: 1px;
+  font-family: inherit;
+  border: 1px solid white;
+  transition: 0.3s ease-out;
+
+}
+
+#convert-button:hover{
+  color:black;
+  background-color:  white;
+  border: 1px solid  lightgray;
+  transform: scale(1.1);
+}
+
 .top-container{
   height: 30vh;
   background-color: red;
-
 }
 
 .bottom-container {
