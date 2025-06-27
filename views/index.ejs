@@ -6,15 +6,19 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
         <link rel="stylesheet" href="/css/style.css">
-        <title>Homepage</title>   
+        <title>Homepage</title>
     </head>
     <body>
-        <h1>Main Page</h1>
-        <button>
-        <a type="button" href="/singleuse"> Use One Time</a>
-        </button> 
-        <button>
-        <a type="button" href="/library"> Access Library</a>
-        </button> 
+        <div class="top-container">
+            <form action="convert-mp3" method="POST" id="form">
+                <h1><i class="fa fa-headphones" aria-hidden="true"></i>Yt2MP3 Converter</h1>
+            </form>
+        </div>
+
+        <div class="bottom-container">
+            <a href="/singleuse" id="once-button" class="button">Convert</a>
+            <a href="/library" id="library-button" class="button">Library</a>
+        </div>
+
     </body>
 </html>
