@@ -1,24 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-        <link rel="stylesheet" href="/css/style.css">
-        <title>Homepage</title>
-    </head>
-    <body>
-        <div class="top-container">
-            <form action="convert-mp3" method="POST" id="form">
-                <h1><i class="fa fa-headphones" aria-hidden="true"></i>Yt2MP3 Converter</h1>
-            </form>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>YT to MP3 Editor</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>YouTube to MP3 Editor</h1>
+    </header>
+
+    <main>
+      <!-- Converter Card -->
+      <section class="card converter-form">
+        <label for="youtube-url">YouTube Link ID</label>
+        <input type="text" id="youtube-url" placeholder="Paste YouTube Link ID..." />
+
+        <div class="options">
+        </div>
+        <button id="convert-btn">Convert</button>
+        
+      </section>
+
+        <!-- Metadata Editor Card -->
+        <section class="card metadata-editor">
+        <h2>MP3 Metadata Editor</h2>
+
+        <div class="form-group">
+            <label for="mp3-file">Upload MP3 File</label>
+            <input type="file" id="mp3-file" accept=".mp3">
         </div>
 
-        <div class="bottom-container">
-            <a href="/singleuse" id="once-button" class="button">Convert</a>
-            <a href="/library" id="library-button" class="button">Library</a>
+        <div class="form-group">
+            <label for="cover-image">Cover Image</label>
+            <input type="file" id="cover-image" accept="image/*">
         </div>
 
-    </body>
-</html>
+        <div class="form-grid">
+            <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" placeholder="Untitled">
+            </div>
+
+            <div class="form-group">
+            <label for="artist">Artist</label>
+            <input type="text" id="artist" placeholder="Unknown Artist [Local Copy]">
+            </div>
+
+            <div class="form-group">
+            <label for="album">Album</label>
+            <input type="text" id="album" placeholder="Unknown Album [Local Copy]">
+            </div>
+
+            <div class="form-group">
+            <label for="year">Year</label>
+            <input type="number" id="year" placeholder="YYYY">
+            </div>
+
+            <div class="form-group">
+            <label for="genre">Genre</label>
+            <input type="text" id="genre" placeholder="Other">
+            </div>
+        </div>
+
+        <button id="save-metadata-btn">Save Metadata</button>
+        </section>
+
+      <!-- History Card -->
+      <section class="card history-section">
+        <h2>Conversion History</h2>
+        <ul class="history-list">
