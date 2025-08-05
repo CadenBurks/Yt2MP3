@@ -11,7 +11,7 @@ DEFAULT_YEAR = "2000"
 DEFAULT_GENRE = "Other"
 DEFAULT_TRACK = (1, 10)
 DEFAULT_ALBUM_ARTIST = "Various Artists"
-DEFAULT_COMPOSER = "Unkown"
+DEFAULT_COMPOSER = "Unknown"
 
 # Load the MP3
 audiofile = eyed3.load(file_path)
