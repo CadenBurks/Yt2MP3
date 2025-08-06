@@ -92,9 +92,10 @@
           <% if (typeof metadataSuccess !== "undefined" && metadataSuccess) { %>
             <div class="success">
               <p><%= metadataMessage %></p>
-              <% if (download_link) { %>
+              <% if (typeof download_link !== "undefined" && download_link) { %>
                 <a href="<%= download_link %>" download>Download Updated MP3</a>
               <% } %>
+
             </div>
           <% } else if (typeof metadataSuccess !== "undefined" && !metadataSuccess) { %>
             <div class="errors">
