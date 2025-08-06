@@ -3,6 +3,10 @@ const express = require("express");
 const fetch = require("node-fetch");
 require("dotenv").config();
 
+// action history queue
+const historyQueue = [];
+const MAX_HISTORY = 10;
+
 // create express server
 const app = express();
 
@@ -19,10 +23,10 @@ app.use(express.urlencoded({
 }))
 app.use(express.json());
 
-// routes
+// Get route
 app.get("/", (req, res) => {
-    res.render("index")
-})
+  res.render("index", { history: historyQueue });
+});
 
 const { exec } = require("child_process");
 const { execFile } = require("child_process");
@@ -39,45 +43,73 @@ app.post("/convert-mp3", async (req, res) => {
   const YT_URL = `https://www.youtube.com/watch?v=${videoID}`;
 
   if (!videoID) {
-    return res.render("index", { success: false, message: "Please enter a video ID" });
+    return res.render("index", {
+      success: false,
+      message: "Please enter a video ID",
+      history: historyQueue,
+    });
   }
 
   const outputPath = path.join(__dirname, "downloads", `${videoID}.mp3`);
+  const ffmpegPath = "C:\\ffmpeg\\ffmpeg-7.1.1-full_build\\bin";
 
-  // Make sure downloads folder exists
-  fs.mkdirSync(path.join(__dirname, "downloads"), { recursive: true });
-  
-  const ffmpegPath = "C:\\ffmpeg\\ffmpeg-7.1.1-full_build\\bin"
+  const getTitleCmd = `yt-dlp --print "%(title)s" "${YT_URL}"`;
 
-  const cmd = `yt-dlp -x --audio-format mp3 -o "${outputPath}" --ffmpeg-location "${ffmpegPath}" "${YT_URL}"`;
-
-  exec(cmd, (error, stdout, stderr) => {
-    if (error) {
-      console.error("yt-dlp error:", stderr);
+  exec(getTitleCmd, (titleErr, titleStdout, titleStderr) => {
+    if (titleErr) {
+      console.error("Error getting video title:", titleStderr);
       return res.render("index", {
-      converterSuccess: false,
-      converterMessage: "Failed to download MP3.",
-      metadataSuccess: undefined,
-      metadataMessage: undefined,
+        converterSuccess: false,
+        converterMessage: "Failed to fetch video title.",
+        metadataSuccess: undefined,
+        metadataMessage: undefined,
+        history: historyQueue
       });
-
     }
 
-    console.log("yt-dlp output:", stdout);
+    const videoTitle = titleStdout.trim();  // The actual song name/title
 
-    // Send a link to download the file
-    const downloadLink = `/downloads/${videoID}.mp3`;
-    res.render("index", {
-    converterSuccess: true,
-    converterMessage: "Conversion complete!",
-    song_title: `Video ID: ${videoID}`,
-    song_link: downloadLink,
-    metadataSuccess: undefined,
-    metadataMessage: undefined,
+    const convertCmd = `yt-dlp -x --audio-format mp3 -o "${outputPath}" --ffmpeg-location "${ffmpegPath}" "${YT_URL}"`;
+
+    exec(convertCmd, (convertErr, stdout, stderr) => {
+      if (convertErr) {
+        console.error("yt-dlp error:", stderr);
+        return res.render("index", {
+          converterSuccess: false,
+          converterMessage: "Failed to download MP3.",
+          metadataSuccess: undefined,
+          metadataMessage: undefined,
+          history: historyQueue
+        });
+      }
+
+      console.log("yt-dlp output:", stdout);
+
+      const downloadLink = `/downloads/${videoID}.mp3`;
+
+      // Add to history with real title
+      historyQueue.unshift({
+        type: "conversion",
+        videoID,
+        songTitle: videoTitle,
+        songLink: downloadLink,
+        timestamp: new Date(),
+      });
+      if (historyQueue.length > MAX_HISTORY) historyQueue.pop();
+
+      res.render("index", {
+        converterSuccess: true,
+        converterMessage: "Conversion complete!",
+        song_title: videoTitle,
+        song_link: downloadLink,
+        metadataSuccess: undefined,
+        metadataMessage: undefined,
+        history: historyQueue,
+      });
     });
-
   });
 });
+
 
 // POST route to handle metadata update form
 app.post(
@@ -147,16 +179,35 @@ execFile("python", ["C:\\GitRepos\\Yt2MP3\\mp3cover.py", pythonInput],
     fs.copyFileSync(mp3File.path, outputPath);
     
     cleanupFiles();
-    
-    // render message after success
+
     const downloadUrl = `/downloads/${mp3File.originalname}`;
+    
+    // Add success to history queue
+    historyQueue.unshift({
+    type: "metadata",
+    metadata: {
+    title: metadata.title,
+    artist: metadata.artist,
+    album: metadata.album,
+    year: metadata.year,
+    genre: metadata.genre,
+    },
+    downloadLink: downloadUrl,
+    fileName: mp3File.originalname,
+    timestamp: new Date(),
+    });
+    if (historyQueue.length > MAX_HISTORY) historyQueue.pop();
+
+    // render message after success
     res.render("index", {
     metadataSuccess: true,
     metadataMessage: "Metadata updated!",
     download_link: downloadUrl,
     converterSuccess: undefined,
     converterMessage: undefined,
+    history: historyQueue
     });
+
   }
 );
     } catch (error) {
