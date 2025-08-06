@@ -14,61 +14,100 @@
 
     <main>
       <!-- Converter Card -->
-      <section class="card converter-form">
-        <label for="youtube-url">YouTube Link ID</label>
-        <input type="text" id="youtube-url" placeholder="Paste YouTube Link ID..." />
+      <form action="/convert-mp3" method="POST" id="form">
+        <section class="card converter-form">
+          <label for="youtube-url">YouTube Link ID</label>
+          <input type="text" id="youtube-url" name="videoID" placeholder="Paste YouTube Link ID..." />
+          
+          <button id="convert-btn">Convert</button>
 
-        <div class="options">
-        </div>
-        <button id="convert-btn">Convert</button>
-        
-      </section>
+          <div class="bottom-container">
+            <% if (typeof converterSuccess !== "undefined" && converterSuccess) { %>
+              <div class="success">
+                <% if (typeof song_title !== "undefined" && song_title) { %>
+                  <p><%= song_title %></p>
+                <% } %>
+                <% if (typeof song_link !== "undefined" && song_link) { %>
+                  <a href="<%= song_link %>" id="download-btn" download>DOWNLOAD</a>
+                <% } %>
+              </div>
 
-        <!-- Metadata Editor Card -->
-        <section class="card metadata-editor">
+              <% } else if(typeof converterSuccess != "undefined" && !converterSuccess) { %>
+                <div class="errors">
+                  <p><%= converterMessage %></p>
+                </div>
+              <% } %>
+          </div>
+        </section>
+      </form>
+
+
+      <!-- Metadata Editor Card -->
+      <section class="card metadata-editor">
         <h2>MP3 Metadata Editor</h2>
 
-        <div class="form-group">
+        <form id="metadata-form" action="/update-metadata" method="POST" enctype="multipart/form-data">
+          
+          <div class="form-group">
             <label for="mp3-file">Upload MP3 File</label>
-            <input type="file" id="mp3-file" accept=".mp3">
-        </div>
+            <input type="file" id="mp3-file" name="mp3File" accept=".mp3" required />
+          </div>
 
-        <div class="form-group">
+          <div class="form-group">
             <label for="cover-image">Cover Image</label>
-            <input type="file" id="cover-image" accept="image/*">
+            <input type="file" id="cover-image" name="coverImage" accept="image/*" />
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="title">Title</label>
+              <input type="text" id="title" name="title" placeholder="Untitled" />
+            </div>
+
+            <div class="form-group">
+              <label for="artist">Artist</label>
+              <input type="text" id="artist" name="artist" placeholder="Unknown Artist [Local Copy]" />
+            </div>
+
+            <div class="form-group">
+              <label for="album">Album</label>
+              <input type="text" id="album" name="album" placeholder="Unknown Album [Local Copy]" />
+            </div>
+
+            <div class="form-group">
+              <label for="year">Year</label>
+              <input type="number" id="year" name="year" placeholder="YYYY" />
+            </div>
+
+            <div class="form-group">
+              <label for="genre">Genre</label>
+              <input type="text" id="genre" name="genre" placeholder="Other" />
+            </div>
+          </div>
+
+          <button type="submit" id="save-metadata-btn">Save Metadata</button>
+        </form>
+
+        <div id="metadataResult">
+          <% if (typeof metadataSuccess !== "undefined" && metadataSuccess) { %>
+            <div class="success">
+              <p><%= metadataMessage %></p>
+              <% if (download_link) { %>
+                <a href="<%= download_link %>" download>Download Updated MP3</a>
+              <% } %>
+            </div>
+          <% } else if (typeof metadataSuccess !== "undefined" && !metadataSuccess) { %>
+            <div class="errors">
+              <p><%= metadataMessage %></p>
+            </div>
+          <% } %>
         </div>
 
-        <div class="form-grid">
-            <div class="form-group">
-            <label for="title">Title</label>
-            <input type="text" id="title" placeholder="Untitled">
-            </div>
-
-            <div class="form-group">
-            <label for="artist">Artist</label>
-            <input type="text" id="artist" placeholder="Unknown Artist [Local Copy]">
-            </div>
-
-            <div class="form-group">
-            <label for="album">Album</label>
-            <input type="text" id="album" placeholder="Unknown Album [Local Copy]">
-            </div>
-
-            <div class="form-group">
-            <label for="year">Year</label>
-            <input type="number" id="year" placeholder="YYYY">
-            </div>
-
-            <div class="form-group">
-            <label for="genre">Genre</label>
-            <input type="text" id="genre" placeholder="Other">
-            </div>
         </div>
+      </section>
 
-        <button id="save-metadata-btn">Save Metadata</button>
-        </section>
 
       <!-- History Card -->
       <section class="card history-section">
-        <h2>Conversion History</h2>
+        <h2>Editor History</h2>
         <ul class="history-list">

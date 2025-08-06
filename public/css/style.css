@@ -77,6 +77,26 @@ header h1 {
   outline: none;
 }
 
+.success, .errors {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.success {
+  background-color: #e6ffed;
+  color: #2e7d32;
+  border: 2px solid #81c784;
+}
+
+.errors {
+  background-color: #ffe6e6;
+  color: #c62828;
+  border: 2px solid #ef5350;
+}
+
 .options {
   display: flex;
   gap: 20px;
@@ -160,35 +180,6 @@ header h1 {
 .history-list span {
   font-size: 0.85rem;
   color: #999;
-}
-
-/* Info Section */
-.info-section {
-  border-left: 6px solid #1abc9c;
-  background: #e7fdfb;
-}
-
-.info-section h2 {
-  font-size: 1.3rem;
-  margin-bottom: 15px;
-  color: #117a65;
-}
-
-.info-section p {
-  font-size: 1rem;
-  color: #555;
-  line-height: 1.6;
-}
-
-/* Footer */
-footer {
-  text-align: center;
-  padding: 20px;
-  font-size: 0.95rem;
-  color: #666;
-  background-color: #f1f1f1;
-  border-top: 1px solid #ddd;
-  border-radius: 0 0 12px 12px;
 }
 
 /* Metadata Editor Section */
