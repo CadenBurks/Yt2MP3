@@ -51,7 +51,11 @@ app.post("/convert-mp3", async (req, res) => {
   }
 
   const outputPath = path.join(__dirname, "downloads", `${videoID}.mp3`);
-  const ffmpegPath = "C:\\ffmpeg\\ffmpeg-7.1.1-full_build\\bin";
+  const ffmpegPath = process.env.FFMPEG_PATH;
+
+  const convertCmd = ffmpegPath
+    ? `yt-dlp -x --audio-format mp3 -o "${outputPath}" --ffmpeg-location "${ffmpegPath}" "${YT_URL}"`
+    : `yt-dlp -x --audio-format mp3 -o "${outputPath}" "${YT_URL}"`;
 
   const getTitleCmd = `yt-dlp --print "%(title)s" "${YT_URL}"`;
 
@@ -68,8 +72,6 @@ app.post("/convert-mp3", async (req, res) => {
     }
 
     const videoTitle = titleStdout.trim();  // The actual song name/title
-
-    const convertCmd = `yt-dlp -x --audio-format mp3 -o "${outputPath}" --ffmpeg-location "${ffmpegPath}" "${YT_URL}"`;
 
     exec(convertCmd, (convertErr, stdout, stderr) => {
       if (convertErr) {
@@ -159,7 +161,7 @@ const cleanupFiles = () => {
   }
 };
 
-execFile("python", ["C:\\GitRepos\\Yt2MP3\\mp3cover.py", pythonInput], 
+execFile("python", [path.join(__dirname, "mp3cover.py"), pythonInput], 
   (error, stdout, stderr) => {
     if (error) {
       console.error("Python script error:", stderr);
