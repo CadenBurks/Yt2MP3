@@ -1,55 +1,77 @@
+import sys
+import json
 import eyed3
-from eyed3.id3.frames import ImageFrame, TextFrame
+from eyed3.id3.frames import ImageFrame
 
-file_path = r"C:\Users\CadenB\OneDrive\Music\MyMusic\ytmp3free.cc_persona-3-reload-color-your-night-with-lyrics-youtubemp3free.org.mp3"
-art_path = 'colornight.jpg'
+def main():
+    # Check for JSON input
+    if len(sys.argv) < 2:
+        print("Error: Missing JSON argument")
+        sys.exit(1)
 
-DEFAULT_TITLE = "Untitled"
-DEFAULT_ARTIST = "Unknown Artist [Local Copy]"
-DEFAULT_ALBUM = "Unknown Album [Local Copy]"
-DEFAULT_YEAR = "2000"
-DEFAULT_GENRE = "Other"
-DEFAULT_TRACK = (1, 10)
-DEFAULT_ALBUM_ARTIST = "Various Artists"
-DEFAULT_COMPOSER = "Unknown"
+    # Parse JSON data
+    try:
+        data = json.loads(sys.argv[1])
+    except json.JSONDecodeError:
+        print("Error: Invalid JSON input")
+        sys.exit(1)
 
-# Load the MP3
-audiofile = eyed3.load(file_path)
+    file_path = data.get("file_path")
+    art_path = data.get("art_path")
+    metadata = data.get("metadata", {})
 
-if audiofile is None:
-    print(f"Failed to load: {file_path}")
-    exit()
+    if not file_path:
+        print("Error: MP3 file path is required.")
+        sys.exit(1)
 
-# Clear and re-init tag
-if audiofile.tag is not None:
+    # Load the MP3 file
+    audiofile = eyed3.load(file_path)
+    if audiofile is None or audiofile.tag is None:
+        print(f"Error: Could not load MP3 file or tags from {file_path}")
+        sys.exit(1)
+
+    # Clear existing tag and reinitialize
     audiofile.tag.clear()
+    audiofile.initTag()
+
+    # Apply metadata
+    audiofile.tag.title = metadata.get("title", "Untitled")
+    audiofile.tag.artist = metadata.get("artist", "Unknown Artist [Local Copy]")
+    audiofile.tag.album = metadata.get("album", "Unknown Album [Local Copy]")
+    audiofile.tag.album_artist = metadata.get("album_artist", "Various Artists")
+    audiofile.tag.genre = metadata.get("genre", "Other")
+    audiofile.tag.composer = metadata.get("composer", "Unknown")
+    audiofile.tag.disc_num = tuple(metadata.get("disc_num", (1, 0)))
+
+    year = metadata.get("year")
+    if year:
+        try:
+            audiofile.tag.year = int(year)
+            audiofile.tag.release_date = year
+        except ValueError:
+            print("Warning: Invalid year format")
+
+    track_num = metadata.get("track_num")
+    if track_num:
+        try:
+            audiofile.tag.track_num = tuple(track_num)
+        except:
+            audiofile.tag.track_num = (1, 0)
+
+    if art_path:
+        try:
+            with open(art_path, "rb") as img_file:
+                audiofile.tag.images.set(
+                    ImageFrame.FRONT_COVER,
+                    img_file.read(),
+                    "image/jpeg"
+                )
+        except Exception as e:
+            print(f"Warning: Failed to embed cover image - {e}")
+
     audiofile.tag.save(version=eyed3.id3.ID3_V2_3)
 
-audiofile.initTag()
+    print(f"Metadata successfully updated: {file_path}")
 
-# Apply metadata
-audiofile.tag.title = DEFAULT_TITLE
-audiofile.tag.artist = DEFAULT_ARTIST
-audiofile.tag.album = DEFAULT_ALBUM
-audiofile.tag.album_artist = DEFAULT_ALBUM_ARTIST
-audiofile.tag.genre = DEFAULT_GENRE
-audiofile.tag.year = int(DEFAULT_YEAR)
-audiofile.tag.track_num = DEFAULT_TRACK
-audiofile.tag.composer = DEFAULT_COMPOSER
-audiofile.tag.disc_num = (1, 2)
-
-# Use only one date to avoid TDRL warnings (eyed3 will drop extras anyway)
-audiofile.tag.release_date = DEFAULT_YEAR
-
-# Embed album art
-with open(art_path, 'rb') as img_file:
-    audiofile.tag.images.set(
-        ImageFrame.FRONT_COVER,
-        img_file.read(),
-        'image/jpeg'
-    )
-
-# Save using ID3v2.3 for maximum compatibility
-audiofile.tag.save(version=eyed3.id3.ID3_V2_3)
-
-print(f"✅ Tagged and saved: {file_path}")
+if __name__ == "__main__":
+    main()
