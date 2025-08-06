@@ -182,6 +182,32 @@ header h1 {
   color: #999;
 }
 
+/* History Buttons Styling */
+.load-conversion,
+.load-metadata {
+  display: inline-block;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin: 0.3rem 0;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.load-conversion:hover,
+.load-metadata:hover {
+  background-color: #2980b9;
+}
+
+.history-section ul.history-list li {
+  list-style-type: none;
+  margin-bottom: 0.4rem;
+}
+
+
 /* Metadata Editor Section */
 .metadata-editor {
   border-left: 6px solid #ff4d4d;

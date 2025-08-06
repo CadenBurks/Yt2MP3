@@ -111,3 +111,54 @@
       <section class="card history-section">
         <h2>Editor History</h2>
         <ul class="history-list">
+          <% if (history && history.length > 0) { %>
+            <% history.forEach((item, i) => { %>
+              <% if (item.type === "conversion") { %>
+                <li>
+                  <button type="button" class="load-conversion" data-videoid="<%= item.videoID %>">
+                    Load: <%= item.songTitle %>
+                  </button>
+                </li>
+              <% } else if (item.type === "metadata") { %>
+                <li>
+                  <button type="button" class="load-metadata"
+                    data-title="<%= item.metadata.title %>"
+                    data-artist="<%= item.metadata.artist %>"
+                    data-album="<%= item.metadata.album %>"
+                    data-year="<%= item.metadata.year %>"
+                    data-genre="<%= item.metadata.genre %>"
+                  >
+                    Load Metadata: <%= item.fileName %>
+                  </button>
+                </li>
+              <% } %>
+            <% }); %>
+          <% } else { %>
+            <li>No recent actions.</li>
+          <% } %>
+        </ul>
+
+        <ul class="history-list">
+
+          <script>
+  // Load conversion (YouTube video ID)
+  document.querySelectorAll(".load-conversion").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const videoID = btn.dataset.videoid;
+      document.getElementById("youtube-url").value = videoID;
+    });
+  });
+
+  // Load metadata into form
+  document.querySelectorAll(".load-metadata").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.getElementById("title").value = btn.dataset.title || "";
+      document.getElementById("artist").value = btn.dataset.artist || "";
+      document.getElementById("album").value = btn.dataset.album || "";
+      document.getElementById("year").value = btn.dataset.year || "";
+      document.getElementById("genre").value = btn.dataset.genre || "";
+    });
+  });
+</script>
+</body>
+</html>
