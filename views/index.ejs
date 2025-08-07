@@ -22,16 +22,20 @@
           <button id="convert-btn">Convert</button>
 
           <div class="bottom-container">
+            <!-- Checks if conversion was successful -->
             <% if (typeof converterSuccess !== "undefined" && converterSuccess) { %>
               <div class="success">
+                <!-- Inserts title of video -->
                 <% if (typeof song_title !== "undefined" && song_title) { %>
                   <p><%= song_title %></p>
                 <% } %>
+                <!-- Inserts song link for download -->
                 <% if (typeof song_link !== "undefined" && song_link) { %>
                   <a href="<%= song_link %>" id="download-btn" download>DOWNLOAD</a>
                 <% } %>
               </div>
 
+              <!-- Error message for failed conversion -->
               <% } else if(typeof converterSuccess != "undefined" && !converterSuccess) { %>
                 <div class="errors">
                   <p><%= converterMessage %></p>
@@ -89,13 +93,17 @@
         </form>
 
         <div id="metadataResult">
+          <!-- Checks if metadata update was successful -->
           <% if (typeof metadataSuccess !== "undefined" && metadataSuccess) { %>
             <div class="success">
+              <!-- Success message and link to updated MP3 -->
               <p><%= metadataMessage %></p>
-              <% if (download_link) { %>
+              <% if (typeof download_link !== "undefined" && download_link) { %>
                 <a href="<%= download_link %>" download>Download Updated MP3</a>
               <% } %>
+
             </div>
+          <!-- Failure message -->
           <% } else if (typeof metadataSuccess !== "undefined" && !metadataSuccess) { %>
             <div class="errors">
               <p><%= metadataMessage %></p>
@@ -111,6 +119,7 @@
       <section class="card history-section">
         <h2>Editor History</h2>
         <ul class="history-list">
+          <!-- Loops over history queue and renders each available action -->
           <% if (history && history.length > 0) { %>
             <% history.forEach((item, i) => { %>
               <% if (item.type === "conversion") { %>
@@ -121,6 +130,7 @@
                 </li>
               <% } else if (item.type === "metadata") { %>
                 <li>
+                  <!-- Embeds data to be auto-filled -->
                   <button type="button" class="load-metadata"
                     data-title="<%= item.metadata.title %>"
                     data-artist="<%= item.metadata.artist %>"
@@ -141,7 +151,8 @@
         <ul class="history-list">
 
           <script>
-  // Load conversion (YouTube video ID)
+
+  // Loads conversion ID of a selected successful conversion
   document.querySelectorAll(".load-conversion").forEach(btn => {
     btn.addEventListener("click", () => {
       const videoID = btn.dataset.videoid;
@@ -149,7 +160,7 @@
     });
   });
 
-  // Load metadata into form
+  // Load metadata from selected successful metadata update
   document.querySelectorAll(".load-metadata").forEach(btn => {
     btn.addEventListener("click", () => {
       document.getElementById("title").value = btn.dataset.title || "";
