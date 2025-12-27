@@ -45,7 +45,7 @@ The author does **not** condone or encourage copyright infringement or violation
 
 1. Clone the repository with `git clone https://github.com/CadenBurks/Yt2MP3.git` and `cd Yt2MP3`. 
 2. Install Node.js dependencies by ensuring Node.js is installed, then run `npm install`. 
-3. Install Python dependencies by ensuring Python 3 is installed, creating a virtual environment with `python -m venv venv`, activating it (`venv\Scripts\activate` on Windows or `source venv/bin/activate` on macOS/Linux), and running `pip install -r requirements.txt` to install `eyed3` and optionally `yt-dlp`. 
+3. Install Python dependencies by ensuring Python 3 is installed, creating a virtual environment with `python -m venv venv`, activating it (`venv\Scripts\activate` on Windows or `source venv/bin/activate` on macOS/Linux), and running `pip install -r requirements.txt` to install `eyed3` and `yt-dlp`. 
 4. Install FFmpeg (required for audio conversion) by downloading it from [FFmpeg.org](https://ffmpeg.org/) and adding it to your PATH on Windows, or using `brew install ffmpeg` on macOS, or `sudo apt install ffmpeg` on Linux. Configure environment variables by creating a `.env` file with `PORT=3000` and optionally `FFMPEG_PATH=/full/path/to/ffmpeg` if FFmpeg is not in your system PATH.
 5. Run the server using `npm start`, it will then open your browser at [http://localhost:3000](http://localhost:3000).
 6. To download audio from a YouTube video, copy the video's ID and paste it into the conversion box.
