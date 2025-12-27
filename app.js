@@ -9,6 +9,7 @@ const path = require("path"); // For making file paths
 const fs = require("fs"); // For file I/O
 const multer = require("multer"); // For file uploads
 const upload = multer({ dest: path.join(__dirname, "temp_uploads") }); // For saving uploaded files
+const open = require("open").default; // Opens browser automatically
 
 
 // Action history queue
@@ -232,6 +233,7 @@ app.post(
 );
 
 // Start server
-app.listen(PORT, () =>{
-    console.log(`Server started on port ${PORT}`);
-})
+app.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`);
+  open(`http://localhost:${PORT}`);
+});
